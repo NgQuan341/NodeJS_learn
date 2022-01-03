@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const { DateTime } = require("luxon");
 
 var Schema = mongoose.Schema;
 
@@ -17,6 +18,15 @@ BookInstanceSchema
 .get(function () {
   return '/catalog/bookinstance/' + this._id;
 });
-
+BookInstanceSchema
+.virtual('due_back_formatted')
+.get(function () {
+  if(this.due_back){
+    return DateTime.fromJSDate(this.due_back).toFormat('yyyy-MM-dd');
+  }
+  else{
+    return undefined
+  }
+});
 //Export model
 module.exports = mongoose.model('BookInstance', BookInstanceSchema);
